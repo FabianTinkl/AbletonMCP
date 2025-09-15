@@ -1,0 +1,74 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ableton-mcp"
+version = "0.1.0"
+description = "MCP server for AI-powered Ableton Live control"
+authors = [{name = "AbletonMCP"}]
+license = {text = "MIT"}
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+
+dependencies = [
+    "mcp>=1.2.0",
+    "python-osc>=1.8.0",
+    "music21>=9.1.0",
+    "magenta>=2.1.4",
+    "librosa>=0.10.0",
+    "numpy>=1.24.0",
+    "scipy>=1.10.0",
+    "asyncio-midi>=0.5.0",
+    "pydantic>=2.0.0",
+    "fastapi>=0.104.0",
+    "uvicorn>=0.24.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-asyncio>=0.21.0",
+    "black>=23.0.0",
+    "isort>=5.12.0",
+    "mypy>=1.6.0",
+    "pre-commit>=3.4.0",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["mcp_server*", "ableton_control*", "music_ai*", "audio_processing*", "knowledge_base*"]
+
+[tool.black]
+line-length = 88
+target-version = ['py310']
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  # directories
+  \.eggs
+  | \.git
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | build
+  | dist
+)/
+'''
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+line_length = 88
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
