@@ -364,35 +364,35 @@ class SamplesHandler:
             for param_name, value in parameters.items():
                 if param_name.lower() == "gain":
                     # Set clip gain (0.0 to 1.0, where 0.75 = 0dB)
-                    await self.ableton_tools.osc_client.send(
+                    self.ableton_tools.osc_client.send(
                         "/live/clip/set/gain", track_id, clip_id, float(value)
                     )
                     applied_params.append(f"Gain: {value:.2f} ({self._gain_to_db(value):.1f} dB)")
                 
                 elif param_name.lower() == "start_marker":
                     # Set clip start position
-                    await self.ableton_tools.osc_client.send(
+                    self.ableton_tools.osc_client.send(
                         "/live/clip/set/start_marker", track_id, clip_id, float(value)
                     )
                     applied_params.append(f"Start Marker: {value:.3f} beats")
                 
                 elif param_name.lower() == "end_marker":
                     # Set clip end position
-                    await self.ableton_tools.osc_client.send(
+                    self.ableton_tools.osc_client.send(
                         "/live/clip/set/end_marker", track_id, clip_id, float(value)
                     )
                     applied_params.append(f"End Marker: {value:.3f} beats")
                 
                 elif param_name.lower() == "loop_start":
                     # Set loop start point
-                    await self.ableton_tools.osc_client.send(
+                    self.ableton_tools.osc_client.send(
                         "/live/clip/set/loop_start", track_id, clip_id, float(value)
                     )
                     applied_params.append(f"Loop Start: {value:.3f} beats")
                 
                 elif param_name.lower() == "loop_end":
                     # Set loop end point
-                    await self.ableton_tools.osc_client.send(
+                    self.ableton_tools.osc_client.send(
                         "/live/clip/set/loop_end", track_id, clip_id, float(value)
                     )
                     applied_params.append(f"Loop End: {value:.3f} beats")
@@ -466,12 +466,12 @@ class SamplesHandler:
                 return [{"type": "text", "text": f"❌ Invalid warp mode '{warp_mode}'. Valid modes: {', '.join(valid_modes)}"}]
             
             # Set warp mode via OSC (this would need specific OSC commands)
-            await self.ableton_tools.osc_client.send(
+            self.ableton_tools.osc_client.send(
                 "/live/clip/set/warp_mode", track_id, clip_id, warp_mode
             )
             
             if preserve_formants:
-                await self.ableton_tools.osc_client.send(
+                self.ableton_tools.osc_client.send(
                     "/live/clip/set/preserve_formants", track_id, clip_id, 1
                 )
             
