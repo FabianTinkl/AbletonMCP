@@ -141,7 +141,7 @@ The clip is ready for note input and will enforce the selected scale constraints
                     velocity = max(1, min(127, velocity))
                 
                 # Add note via OSC
-                await self.ableton_tools.osc_client.send(
+                self.ableton_tools.osc_client.send(
                     "/live/clip/add/notes",
                     track_id, clip_id, pitch, start_time, duration, velocity, int(mute)
                 )
@@ -214,7 +214,7 @@ The clip is ready for note input and will enforce the selected scale constraints
             
             # Remove existing note (using pitch as identifier for now)
             if pitch is not None:
-                await self.ableton_tools.osc_client.send(
+                self.ableton_tools.osc_client.send(
                     "/live/clip/remove/notes",
                     track_id, clip_id, note_id, start_time or 0, duration or 1
                 )
@@ -225,7 +225,7 @@ The clip is ready for note input and will enforce the selected scale constraints
             final_start = start_time if start_time is not None else 0.0
             final_duration = duration if duration is not None else 1.0
             
-            await self.ableton_tools.osc_client.send(
+            self.ableton_tools.osc_client.send(
                 "/live/clip/add/notes",
                 track_id, clip_id, final_pitch, final_start, final_duration, final_velocity, 0
             )
