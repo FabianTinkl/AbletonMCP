@@ -250,6 +250,44 @@ async def generate_melody(track_id: int, clip_id: int, scale_name: str = "natura
     except Exception as e:
         return f"Error: {str(e)}"
 
+@mcp.tool()
+async def generate_drum_pattern(track_id: int, clip_id: int, pattern_style: str = "four_on_the_floor",
+                               length_bars: int = 4, complexity: str = "medium", 
+                               genre: str = "techno", swing: float = 0.0) -> str:
+    """Generate complex drum patterns as MIDI notes with authentic drum mapping.
+    
+    Args:
+        track_id: Target track index
+        clip_id: Target clip index
+        pattern_style: Drum pattern style (four_on_the_floor, breakbeat, latin, funk, industrial, jungle)
+        length_bars: Pattern length in bars (default: 4)
+        complexity: Pattern complexity (simple, medium, complex)
+        genre: Musical genre for style adaptation (default: techno)
+        swing: Swing timing 0.0-0.5 (0.0 = straight, 0.5 = max swing)
+    """
+    # Validate pattern style
+    valid_patterns = ["four_on_the_floor", "breakbeat", "latin", "funk", "industrial", "jungle"]
+    if pattern_style not in valid_patterns:
+        return f"Error: pattern_style must be one of {', '.join(valid_patterns)}"
+    
+    # Validate complexity
+    if complexity not in ["simple", "medium", "complex"]:
+        return "Error: complexity must be 'simple', 'medium', or 'complex'"
+    
+    # Validate swing
+    if not 0.0 <= swing <= 0.5:
+        return "Error: swing must be between 0.0 (straight) and 0.5 (max swing)"
+        
+    try:
+        if not handlers:
+            return "Error: Server not initialized"
+        result = await handlers["midi"].drum_pattern(
+            track_id, clip_id, pattern_style, length_bars, complexity, genre, swing
+        )
+        return result[0]["text"] if result and "text" in result[0] else f"Generated {complexity} {pattern_style} drum pattern ({length_bars} bars)"
+    except Exception as e:
+        return f"Error: {str(e)}"
+
 # Instruments Tools
 @mcp.tool()
 async def list_instruments(category: Optional[str] = None, search_term: Optional[str] = None) -> str:

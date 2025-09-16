@@ -237,3 +237,41 @@ class AbletonTools:
                 return {"status": "error", "message": "No response from Ableton Live"}
         except Exception as e:
             return {"status": "error", "message": f"Connection failed: {str(e)}"}
+
+    # MIDI Operations
+    async def add_notes_to_clip(self, track_idx: int, clip_idx: int, notes: List[Dict[str, Any]]) -> Dict[str, Any]:
+        """Add MIDI notes to a clip.
+        
+        Args:
+            track_idx: Track index
+            clip_idx: Clip index  
+            notes: List of note dictionaries with keys: pitch, start_time, duration, velocity
+            
+        Returns:
+            Status dict with success/error message
+        """
+        await self.ensure_connected()
+        
+        try:
+            for note in notes:
+                await self.osc_client.add_notes(
+                    track_idx, 
+                    clip_idx,
+                    note["pitch"],
+                    note["start_time"], 
+                    note["duration"],
+                    note["velocity"],
+                    note.get("mute", False)
+                )
+                
+            return {
+                "status": "success",
+                "message": f"Added {len(notes)} MIDI notes to track {track_idx}, clip {clip_idx}",
+                "track_index": track_idx,
+                "clip_index": clip_idx,
+                "notes_count": len(notes)
+            }
+            
+        except Exception as e:
+            logger.error(f"Failed to add notes to clip: {e}")
+            return {"status": "error", "message": f"Failed to add notes: {str(e)}"}
